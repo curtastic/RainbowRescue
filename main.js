@@ -75,9 +75,9 @@ let gGameUpdate = () => {
 
 let gLevelWinDone = () => {
 	gLevel++
-	if(gLevel > 10) {
-		alert("You Win!")
+	if(gLevel > 11) {
 		gStateSet(gStateTitle)
+		gPathI = gPathEndI = 0
 		gCamX = 0
 		gCamY = -2
 		return
@@ -382,7 +382,7 @@ let gGameDraw = () => {
 				gPen.save()
 				gPen.translate(
 					gScaleX(.5+Math.cos(angle)*.5) + Math.sin(gLoops/7+1+i)*(2-line),
-					gScaleY(.9+line*.2+Math.sin(angle)*.5) + Math.sin(gLoops/7+i)*(2-line)
+					gScaleY(.86+line*.2+Math.sin(angle)*.5) + Math.sin(gLoops/7+i)*(2-line)
 				)
 				gPen.rotate(angle+Math.PI/2)
 				gPen.fillStyle = '#'+(line?'97E':gRainbowColors[i])
@@ -399,10 +399,10 @@ let gGameDraw = () => {
 			}
 		}
 		//gTextDraw("Rainbow Rescue", .5, .8, .1, '#F0F')
-		gTextDraw("Unicorns need your help!", .5, .9, .05, '#F0F')
-		gTextDraw("You must send rainbows down", .5, .95, .05, '#F0F')
-		gTextDraw("from the clouds to reach them", .5, 1, .05, '#F0F')
-		gTextDraw("to give them magic flying powers.", .5, 1.05, .05, '#F0F')
+		gTextDraw("Unicorns need your help!", .5, .85, .05, '#F0F')
+		gTextDraw("You must send rainbows down", .5, .9, .05, '#F0F')
+		gTextDraw("from the clouds to reach them", .5, .95, .05, '#F0F')
+		gTextDraw("to give them magic flying powers.", .5, 1, .05, '#F0F')
 
 		var sizeX = .38
 		if(gButtonDraw(.5-sizeX/2, 1.14, sizeX, .23, "PLAY")) {
@@ -537,13 +537,13 @@ let gUniDraw = (x,y,size) => {
 
 	//body back layer
 	s = "M7,38L7,16L40,16L47,40L38,41L34,23L22,23Q22,25 18,29L18,39L7,38"
-	gPathStringDraw(x+size*.25,y+size*1.5, s,size*5,'#DCF',size*.1,'#BBB')
+	gPathStringDraw(x+size*.25,y+size*1.5, s,size*5,'#DCF',size*.15,'#AAA')
 	gUniHoofDraw(x-size*1.3, y+size*1.7, size*1.4, .02)
 	gUniHoofDraw(x+size*1.18, y+size*1.8, size*1.4, -.3, 1)
 	
 	//body
 	s = "M11,60L2,57L5,47Q6,46 7,46Q8,45 7,44Q4,37 9,32Q12,30 18,29L29,24L30,12L35,9L39,8Q37,4 41,0Q44,2 44,7L50,19Q55,19 53,25Q51,31 39,29Q41,40 36,44L40,55L33,59L28,48Q24,49 17,48Q16,50 13,51L11,60"
-	gPathStringDraw(x+size*1,y-size*1, s,size*8,'#FFF',size*.1,'#BBB')
+	gPathStringDraw(x+size*1,y-size*1, s,size*8,'#FFF',size*.15,'#AAA')
 
 	//hoof
 	gUniHoofDraw(x-size*2.1, y+size*1.8, size*1.6, .2)
@@ -555,8 +555,8 @@ let gUniDraw = (x,y,size) => {
 
 	// ear
 	s = "M35,49Q22,39 28,22Q39,29 43,41L35,49"
-	gPathStringDraw(x+size*1.1, y-size*4, s, size*3.5,'#FFF',size*.1,'#BBB')
-	gPathStringDraw(x+size*1.14, y-size*3.9, s, size*2.2,'#FBF')
+	gPathStringDraw(x+size*1.1, y-size*4, s, size*3.5,'#FFF',size*.15,'#AAA')
+	gPathStringDraw(x+size*1.14, y-size*3.9, s, size*2,'#FBF')
 	gLineDraw(x+size*1.23, y-size*3.1, x+size*1.6, y-size*3.45, size*.22, '#FFF')
 
 	// horn
@@ -634,6 +634,54 @@ let gLevelSetup = () => {
 		gGemMake(gGemKindGoal, .2, 1.5, .18)
 		gGemMake(gGemKindGoal, .8, 1.5, .18)
 	}
+	if(gLevel == 11) {
+		var poss = [
+			0,0,
+			2,0,
+			0,1,
+			2,1,
+			1,2,
+			1,3,
+
+			5,1,
+			4,2,
+			6,2,
+			5,3,
+			
+			8,1,
+			10,1,
+			8,2,
+			10,2,
+			9,3,
+
+			0,5,
+			0,6,
+			2,5,
+			2,6,
+			4,5,
+			4,6,
+			4,7,
+			0,7,
+			2,7,
+			1,8,
+			3,8,
+			
+			6,5,
+			6,7,
+			6,8,
+			
+			8,6,
+			9,6,
+			10,6,
+			8,7,
+			10,7,
+			8,8,
+			10,8,
+		]
+		for(var i=0; i<poss.length; i+=2) {
+			gGemMake(gGemKindGoal, .08+poss[i]*.085, .8+poss[i+1]*.09, .1)
+		}
+	}
 }
 
 let gLevelDraw = () => {
@@ -645,16 +693,23 @@ let gLevelDraw = () => {
 	
 	if(Math.abs(gLevel-1)<2) {
 		gGrassDraw(0, 1.8, 1.01, .61)
+		gFlowerDraw(.1, 1.8, .03)
+		gFlowerDraw(.9, 1.8, .03)
 	}
 	
 	if(Math.abs(gLevel-2)<2) {
 		gPageX = 1
 		gGrassDraw(0, 1.8, 1.01, .61)
+		gFlowerDraw(.84, 1.8, .03)
 	}
 	
 	if(Math.abs(gLevel-3)<2) {
 		gPageX = 2
 		gGrassDraw(0, 1.8, 1.01, .61)
+		gFlowerDraw(.8, 1.8, .03)
+		gFlowerDraw(.7, 1.8, .03)
+		gFlowerDraw(.6, 1.8, .03)
+		gFlowerDraw(.5, 1.8, .03)
 		if(gHintShowing) {
 			for(var i=0; i<=50; i++) {
 				var far=i/50
@@ -677,6 +732,8 @@ let gLevelDraw = () => {
 	if(Math.abs(gLevel-4)<2) {
 		gPageX = 3
 		gGrassDraw(0, 1.8, 1.01, .61)
+		gFlowerDraw(.15, 1.8, .03)
+		gFlowerDraw(.96, 1.8, .03)
 		if(gHintShowing) {
 			for(var i=0; i<=50; i++) {
 				var far=i/50
@@ -716,6 +773,8 @@ let gLevelDraw = () => {
 		gPageX = 5
 		gGrassDraw(0, 1.4, 1.01, .61)
 		gTreePineDraw(.2, 1.14, .12, .28)
+		gFlowerDraw(.16, 1.4, .03)
+		gFlowerDraw(.92, 1.4, .03)
 		//gTreeDraw(.7, 1.3, .14, .52)
 		
 		if(gHintShowing) {
@@ -742,6 +801,7 @@ let gLevelDraw = () => {
 		gGrassDraw(.5, .65, .91, .2)
 		gGrassDraw(0, 1.15, .78, .5)
 		gGrassDraw(0, .95, .55, .4)
+		gFlowerDraw(.08, .95, .03)
 		if(gHintShowing) {
 			for(var i=0; i<=50; i++) {
 				var far=i/50
@@ -761,6 +821,7 @@ let gLevelDraw = () => {
 	if(Math.abs(gLevel-8)<2) {
 		gPageX = 7
 		gGrassDraw(0, 1.04, .41, .17)
+		gFlowerDraw(.12, 1.04, .03)
 		gGrassDraw(0, 1.38, .41, .17)
 		gGrassDraw(0, 1.75, 1.01, .26)
 		gTreePineDraw(.9, 1.39, .12, .38)
@@ -783,12 +844,16 @@ let gLevelDraw = () => {
 	if(Math.abs(gLevel-9)<2) {
 		gPageX = 8
 		gGrassDraw(0, 1.75, 1.01, .26)
+		gFlowerDraw(.18, 1.75, .03)
+		gFlowerDraw(.29, 1.75, .03)
+		
 		gGrassDraw(.8, 1.1, .202, .8)
 		gLineDraw(.55, 1.16, .55, 1.44, .1, '#643')
 		gCircleDraw(.55, 1.15, .05, '#8b4')
 		gCircleDraw(.55, 1.15+.005, .05, '#ac5')
 		//gGrassDraw(.5, 1.1, .1, .35)
 		gGrassDraw(.55, 1.1, .302, .2)
+		
 		//gTreePineDraw(.7, 1.37, .2, .4)
 		gLineDraw(.535, 1.163, .62, 1.16, .07, '#694')
 		gLineDraw(.525, 1.17, .525, 1.192+.02, .05, '#0003')
@@ -818,6 +883,8 @@ let gLevelDraw = () => {
 	if(Math.abs(gLevel-10)<2) {
 		gPageX = 9
 		gGrassDraw(0, 1.55, 1.01, .5)
+		gFlowerDraw(.5, 1.55, .03)
+		
 		gGrassDraw(0, 1.1, .4, .2)
 		gGrassDraw(.6, 1.1, .402, .2)
 		if(gHintShowing) {
@@ -849,6 +916,11 @@ let gLevelDraw = () => {
 				}
 			}
 		}
+	}
+	
+	if(Math.abs(gLevel-10)<2) {
+		gPageX = 10
+		gGrassDraw(0, 1.55, 1.01, .5)
 	}
 
 }
@@ -943,10 +1015,6 @@ let gGrassDraw = (x,y,sizeX,sizeY) => {
 	gRectDraw(x,y+.023,sizeX+.001,.005,'#8b4')
 	//1px outline top
 	gRectDraw(x,y,sizeX+.001,.005,'#8b4')
-
-	if(sizeX>.2) {
-		gFlowerDraw(x+sizeX*.1+gRandomFake(x+y+gPageX*6)*sizeX*.8, y, rad)
-	}
 }
 
 let gFlowerDraw = (x,y,size) => {
@@ -1410,7 +1478,7 @@ onload = _ => {
 	//LEVEL HACK
 	//LEVEL HACK
 	//LEVEL HACK
-	//gStateSet(gStateInput);gLevel=7;gCamX=gLevel-1;gCamY=0;gLevelSetup()
+	//gStateSet(gStateInput);gLevel=10;gCamX=gLevel-1;gCamY=0;gLevelSetup()
 	gGameUpdate()
 	
 	addEventListener("mousedown", e => {
